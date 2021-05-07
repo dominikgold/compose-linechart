@@ -1,0 +1,3 @@
+rootProject.name = "Compose-LineChart"
+include ':sample-app'
+include ':linecharts'

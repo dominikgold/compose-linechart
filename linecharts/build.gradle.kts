@@ -1,15 +1,17 @@
 plugins {
     id("com.android.library")
     id("kotlin-android")
-    id("com.github.dcendents.android-maven")
+    id("maven-publish")
 }
+
+group = "com.dominikgold"
 
 android {
     compileSdk = 30
     buildToolsVersion = "30.0.2"
 
     defaultConfig {
-        minSdk = 24
+        minSdk = 21
     }
 
     buildFeatures {
@@ -28,6 +30,18 @@ android {
     compileOptions {
         sourceCompatibility(JavaVersion.VERSION_1_8)
         targetCompatibility(JavaVersion.VERSION_1_8)
+    }
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            create<MavenPublication>("release") {
+                artifactId = "compose-linechart"
+                from(components["release"])
+                groupId = "com.dominikgold.compose-linechart"
+            }
+        }
     }
 }
 

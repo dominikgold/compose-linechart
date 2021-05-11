@@ -42,6 +42,8 @@ android {
 
 dependencies {
 
+    implementation(project(":linecharts"))
+
     implementation(Dependencies.androidXCore)
     implementation(Dependencies.appCompat)
     implementation(Dependencies.materialComponents)

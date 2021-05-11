@@ -17,7 +17,7 @@ class SimpleLineChartState {
     )
         private set
 
-    internal var currentDataPoints by mutableStateOf(previousDataPoints)
+    internal var currentDataPoints = previousDataPoints
         private set
 
     fun updateDataPoints(simpleDataPoints: List<SimpleLineChartDataPoint>) {

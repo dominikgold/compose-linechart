@@ -44,7 +44,7 @@ class MainActivity : ComponentActivity() {
 fun MainScreen() {
     val lineChartState = rememberSimpleLineChartState()
     var lineChartData by remember { mutableStateOf(generateRandomizedData()) }
-    lineChartState.updateDataPoints(lineChartData.map { SimpleLineChartDataPoint(it) })
+    lineChartState.updateDataPoints(lineChartData)
     Column(
         Modifier
             .fillMaxSize()

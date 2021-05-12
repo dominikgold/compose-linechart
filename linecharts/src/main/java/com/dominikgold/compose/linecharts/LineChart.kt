@@ -1,19 +1,9 @@
 package com.dominikgold.compose.linecharts
 
-import androidx.compose.animation.core.AnimationSpec
-import androidx.compose.animation.core.CubicBezierEasing
 import androidx.compose.animation.core.animate
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.Button
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -29,7 +19,6 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.constrainHeight
 import androidx.compose.ui.unit.dp
 import kotlin.math.roundToInt
@@ -38,47 +27,38 @@ import kotlin.math.roundToInt
 fun SimpleLineChart(
     lineChartState: SimpleLineChartState,
     modifier: Modifier = Modifier,
-    chartScaffoldColor: Color = MaterialTheme.colors.onBackground,
-    lineColor: Color = MaterialTheme.colors.primary,
-    animationSpec: AnimationSpec<Float>? = tween(
-        durationMillis = 1500,
-        easing = CubicBezierEasing(0.5f, 0.0f, 0.1f, 0.9f),
-    ),
+    config: LineChartConfig = SimpleLineChartConfig(),
+    hoverPopup: @Composable ((SimpleLineChartDataPoint) -> Unit)? = null,
 ) {
     SimpleLineChartInternal(
-        data = lineChartState.currentDataPoints,
-        previousData = lineChartState.previousDataPoints,
+        lineChartState = lineChartState,
         modifier = modifier,
-        chartScaffoldColor = chartScaffoldColor,
-        lineColor = lineColor,
-        animationSpec = animationSpec,
+        config = config,
+        hoverPopup = hoverPopup,
     )
 }
 
 @Composable
 private fun SimpleLineChartInternal(
-    data: NormalizedSimpleLineChartData,
-    previousData: NormalizedSimpleLineChartData,
+    lineChartState: SimpleLineChartState,
     modifier: Modifier,
-    chartScaffoldColor: Color,
-    lineColor: Color,
-    animationSpec: AnimationSpec<Float>?,
+    config: LineChartConfig,
+    hoverPopup: @Composable ((SimpleLineChartDataPoint) -> Unit)?,
 ) {
-    if (animationSpec != null) {
+    if (config.animationSpec != null) {
         SimpleAnimatedLineChart(
-            data = data,
-            previousData = previousData,
-            animationSpec = animationSpec,
+            data = lineChartState.currentDataPoints,
+            previousData = lineChartState.previousDataPoints,
+            config = config,
             modifier = modifier,
-            chartScaffoldColor = chartScaffoldColor,
-            lineColor = lineColor,
+            hoverPopup = hoverPopup,
         )
     } else {
         LineChartInternal(
-            points = createPoints(data.normalizedYAxisValues),
+            points = createPoints(lineChartState.currentDataPoints.normalizedYAxisValues),
             modifier = modifier,
-            chartScaffoldColor = chartScaffoldColor,
-            lineColor = lineColor,
+            config = config,
+            hoverPopup = hoverPopup,
         )
     }
 }
@@ -87,24 +67,24 @@ private fun SimpleLineChartInternal(
 private fun SimpleAnimatedLineChart(
     data: NormalizedSimpleLineChartData,
     previousData: NormalizedSimpleLineChartData,
-    animationSpec: AnimationSpec<Float>,
     modifier: Modifier = Modifier,
-    chartScaffoldColor: Color = MaterialTheme.colors.onBackground,
-    lineColor: Color = MaterialTheme.colors.primary,
+    config: LineChartConfig,
+    hoverPopup: @Composable ((SimpleLineChartDataPoint) -> Unit)?,
 ) {
+    require(config.animationSpec != null) { "AnimationSpec must not be null. This is a library internal error. " }
     if (data.normalizedYAxisValues.isEmpty()) {
         LineChartInternal(
             points = listOf(),
             modifier = modifier,
-            chartScaffoldColor = chartScaffoldColor,
-            lineColor = lineColor,
+            config = config,
+            hoverPopup = hoverPopup,
         )
         return
     }
 
     var animationProgress by remember { mutableStateOf(0f) }
     LaunchedEffect(data) {
-        animate(initialValue = 0f, targetValue = 1f, animationSpec = animationSpec) { value, _ ->
+        animate(initialValue = 0f, targetValue = 1f, animationSpec = config.animationSpec) { value, _ ->
             animationProgress = value
         }
     }
@@ -116,8 +96,8 @@ private fun SimpleAnimatedLineChart(
     LineChartInternal(
         points = points,
         modifier = modifier,
-        chartScaffoldColor = chartScaffoldColor,
-        lineColor = lineColor,
+        config = config,
+        hoverPopup = hoverPopup,
     )
 }
 
@@ -125,8 +105,8 @@ private fun SimpleAnimatedLineChart(
 private fun LineChartInternal(
     points: List<Point>,
     modifier: Modifier,
-    chartScaffoldColor: Color,
-    lineColor: Color,
+    config: LineChartConfig,
+    hoverPopup: @Composable ((SimpleLineChartDataPoint) -> Unit)?,
 ) {
     BoxWithConstraints(modifier) {
         val chartWidth = constraints.maxWidth
@@ -135,8 +115,8 @@ private fun LineChartInternal(
             val chartOutlineWidth = 1.dp.toPx()
             val lineGraphWidth = 2.dp.toPx()
             Canvas(modifier = Modifier.size(chartWidth.toFloat().toDp(), chartHeight.toFloat().toDp())) {
-                drawChartBackground(chartScaffoldColor, chartOutlineWidth)
-                drawLineGraph(points, lineColor, lineGraphWidth, chartOutlineWidth)
+                drawChartBackground(config.chartScaffoldColor, chartOutlineWidth)
+                drawLineGraph(points, config.lineColor, lineGraphWidth, chartOutlineWidth)
             }
         }
     }
@@ -158,11 +138,11 @@ private fun DrawScope.drawLineGraph(
     }
 
     val widthWithoutOutline = this.size.width - chartOutlineWidth
-    drawPoints(points = points.mapIndexed { index, point ->
+    drawPoints(points = points.map { point ->
         // The y axis value needs to be inverted as the given percentages are from bottom to top while the on screen
         //  representation is from top to bottom
         val invertedYAxisPercentage = 1.0 - point.y
-        return@mapIndexed Offset(
+        return@map Offset(
             x = (chartOutlineWidth + widthWithoutOutline * point.x).toFloat(),
             y = heightWithoutOutline * invertedYAxisPercentage.toFloat(),
         )
@@ -191,57 +171,4 @@ private fun DrawScope.drawChartBackground(color: Color, outlineWidth: Float) {
         end = Offset(this.size.width, this.size.height - outlineWidth),
         strokeWidth = outlineWidth,
     )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun SimpleLineChartPreview() {
-    Box(Modifier
-            .background(MaterialTheme.colors.background)
-            .padding(16.dp)) {
-        val lineChartState = remember { SimpleLineChartState() }
-        lineChartState.updateDataPoints(listOf(
-            SimpleLineChartDataPoint(yAxisValue = 90.0, "6 w ago"),
-            SimpleLineChartDataPoint(yAxisValue = 89.0, "5 w ago"),
-            SimpleLineChartDataPoint(yAxisValue = 91.0, "4 w ago"),
-            SimpleLineChartDataPoint(yAxisValue = 93.0, "3 w ago"),
-            SimpleLineChartDataPoint(yAxisValue = 90.0, "2 w ago"),
-            SimpleLineChartDataPoint(yAxisValue = 92.0, "1 w ago"),
-        ))
-        SimpleLineChart(
-            lineChartState = lineChartState,
-            animationSpec = null,
-        )
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun AnimatedLineChartPreview() {
-    val lineChartState = remember { SimpleLineChartState() }
-    lineChartState.updateDataPoints(listOf(
-        SimpleLineChartDataPoint(yAxisValue = 90.0, "6 w ago"),
-        SimpleLineChartDataPoint(yAxisValue = 89.0, "5 w ago"),
-        SimpleLineChartDataPoint(yAxisValue = 91.0, "4 w ago"),
-        SimpleLineChartDataPoint(yAxisValue = 93.0, "3 w ago"),
-        SimpleLineChartDataPoint(yAxisValue = 90.0, "2 w ago"),
-        SimpleLineChartDataPoint(yAxisValue = 92.0, "1 w ago"),
-    ))
-    Column(Modifier
-               .background(MaterialTheme.colors.background)
-               .padding(16.dp)) {
-        SimpleLineChart(lineChartState, animationSpec = tween(500))
-        Button(onClick = {
-            lineChartState.updateDataPoints(listOf(
-                SimpleLineChartDataPoint(yAxisValue = 88.0, "6 w ago"),
-                SimpleLineChartDataPoint(yAxisValue = 90.0, "5 w ago"),
-                SimpleLineChartDataPoint(yAxisValue = 92.0, "4 w ago"),
-                SimpleLineChartDataPoint(yAxisValue = 89.0, "3 w ago"),
-                SimpleLineChartDataPoint(yAxisValue = 87.0, "2 w ago"),
-                SimpleLineChartDataPoint(yAxisValue = 91.0, "1 w ago"),
-            ))
-        }) {
-            Text("Click me!")
-        }
-    }
 }

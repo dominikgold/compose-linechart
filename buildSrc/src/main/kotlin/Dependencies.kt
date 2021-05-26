@@ -4,11 +4,11 @@ object Dependencies {
     val kotlinPlugin = "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
     val kotlinSdk = "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
 
-    val coroutinesVersion = "1.4.3"
+    val coroutinesVersion = "1.5.0"
     val coroutinesCore = "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
     val coroutinesAndroid = "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
 
-    val composeVersion = "1.0.0-beta05"
+    val composeVersion = "1.0.0-beta07"
     val composeUi = "androidx.compose.ui:ui:$composeVersion"
     val composeMaterial = "androidx.compose.material:material:$composeVersion"
     val composeTooling = "androidx.compose.ui:ui-tooling:$composeVersion"
@@ -26,14 +26,6 @@ object Dependencies {
     val androidXCoreVersion = "1.3.2"
     val androidXCore = "androidx.core:core-ktx:$androidXCoreVersion"
 
-    val androidXTestVersion = "1.3.0"
-    val androidXTestCore = "androidx.test:core:$androidXTestVersion"
-    val androidXTestRules = "androidx.test:rules:$androidXTestVersion"
-    val androidXTestRunner = "androidx.test:runner:$androidXTestVersion"
-
-    val androidXTestJUnitVersion = "1.1.2"
-    val androidXTestJUnit = "androidx.test.ext:junit:$androidXTestJUnitVersion"
-
     val jUnitVersion = "4.13.1"
     val jUnit = "junit:junit:$jUnitVersion"
 
@@ -42,5 +34,4 @@ object Dependencies {
 
     val kluentVersion = "1.65"
     val kluent = "org.amshove.kluent:kluent:$kluentVersion"
-    val kluentAndroid = "org.amshove.kluent:kluent-android:$kluentVersion"
 }

@@ -1,6 +1,7 @@
 package com.dominikgold.compose.linecharts
 
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
@@ -40,7 +41,7 @@ internal fun LineChartInternal(
             val chartOutlineWidth = 1.dp.toPx()
             val lineGraphWidth = 2.dp.toPx()
             val chartWidth = constraints.maxWidth
-            val chartHeight = constraints.constrainHeight((chartWidth * 0.75).roundToInt())
+            val chartHeight = constraints.maxHeight
             val pointOffsets = points.calculateOffsetsForDrawing(IntSize(chartWidth, chartHeight), chartOutlineWidth)
             val canvasModifier = if (hoverPopup != null) {
                 var hoverPopupState by remember { mutableStateOf<HoverPopupState?>(null) }
@@ -58,7 +59,7 @@ internal fun LineChartInternal(
             } else {
                 Modifier
             }
-            Canvas(modifier = canvasModifier.size(chartWidth.toFloat().toDp(), chartHeight.toFloat().toDp())) {
+            Canvas(modifier = canvasModifier.size(chartWidth.toDp(), chartHeight.toDp())) {
                 drawChartBackground(config.chartScaffoldColor, chartOutlineWidth)
                 drawLineGraph(pointOffsets, config.lineColor, lineGraphWidth, chartOutlineWidth)
             }

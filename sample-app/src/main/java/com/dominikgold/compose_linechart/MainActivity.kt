@@ -24,6 +24,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dominikgold.compose.linecharts.SimpleLineChart
+import com.dominikgold.compose.linecharts.models.SimpleLineChartConfig
 import com.dominikgold.compose.linecharts.models.rememberSimpleLineChartState
 import com.dominikgold.compose_linechart.ui.theme.ComposeLineChartTheme
 import kotlin.math.roundToInt
@@ -46,7 +47,7 @@ class MainActivity : ComponentActivity() {
 fun MainScreen() {
     val lineChartState = rememberSimpleLineChartState()
     var lineChartData by remember { mutableStateOf(generateRandomizedData()) }
-    lineChartState.updateDataPoints(lineChartData)
+    lineChartState.updateDataPoints(lineChartData, customDataRange = 0.0..100.0)
     Column(
         Modifier
             .fillMaxSize()
@@ -54,14 +55,20 @@ fun MainScreen() {
     ) {
         Text(text = "Compose line charts sample", style = MaterialTheme.typography.h5)
         Spacer(modifier = Modifier.height(24.dp))
-        SimpleLineChart(lineChartState = lineChartState, hoverPopup = { dataPoint ->
-            Card {
-                Column(Modifier.padding(8.dp)) {
-                    Text(text = dataPoint.yAxisValue.roundToInt().toString(), fontWeight = FontWeight.SemiBold)
-                    dataPoint.description?.let { Text(text = it) }
+        SimpleLineChart(
+            lineChartState = lineChartState,
+            config = SimpleLineChartConfig(yAxisLabelsText = {
+                Text(it.roundToInt().toString(), style = MaterialTheme.typography.caption)
+            }),
+            hoverPopup = { dataPoint ->
+                Card {
+                    Column(Modifier.padding(8.dp)) {
+                        Text(text = dataPoint.yAxisValue.roundToInt().toString(), fontWeight = FontWeight.SemiBold)
+                        dataPoint.description?.let { Text(text = it) }
+                    }
                 }
-            }
-        })
+            },
+        )
         Spacer(modifier = Modifier.height(24.dp))
         Button(modifier = Modifier.align(CenterHorizontally), onClick = { lineChartData = generateRandomizedData() }) {
             Text(text = "Update data!")

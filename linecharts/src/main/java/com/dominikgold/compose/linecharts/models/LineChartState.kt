@@ -10,16 +10,16 @@ class SimpleLineChartState {
 
     internal var previousDataPoints = NormalizedSimpleLineChartData(
         original = listOf(SimpleLineChartDataPoint(0.0)),
-        padding = 0.1,
+        customDataRange = null,
     )
         private set
 
     internal var currentDataPoints = previousDataPoints
         private set
 
-    fun updateDataPoints(simpleDataPoints: List<SimpleLineChartDataPoint>) {
+    fun updateDataPoints(simpleDataPoints: List<SimpleLineChartDataPoint>, customDataRange: ClosedRange<Double>? = null) {
         previousDataPoints = currentDataPoints
-        currentDataPoints = NormalizedSimpleLineChartData(simpleDataPoints, padding = 0.1)
+        currentDataPoints = NormalizedSimpleLineChartData(simpleDataPoints, customDataRange)
     }
 
 }

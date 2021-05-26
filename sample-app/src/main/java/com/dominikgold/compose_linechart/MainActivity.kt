@@ -61,7 +61,7 @@ fun MainScreen() {
                 Text(it.roundToInt().toString(), style = MaterialTheme.typography.caption)
             }),
             hoverPopup = { dataPoint ->
-                Card {
+                Card(elevation = 8.dp) {
                     Column(Modifier.padding(8.dp)) {
                         Text(text = dataPoint.yAxisValue.roundToInt().toString(), fontWeight = FontWeight.SemiBold)
                         dataPoint.description?.let { Text(text = it) }

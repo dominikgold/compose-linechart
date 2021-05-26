@@ -1,7 +1,6 @@
 package com.dominikgold.compose.linecharts
 
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
@@ -19,7 +18,6 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.IntSize
-import androidx.compose.ui.unit.constrainHeight
 import androidx.compose.ui.unit.dp
 import com.dominikgold.compose.linecharts.hoverpopup.HoverPopup
 import com.dominikgold.compose.linecharts.hoverpopup.HoverPopupState
@@ -27,16 +25,14 @@ import com.dominikgold.compose.linecharts.hoverpopup.detectHoverPopup
 import com.dominikgold.compose.linecharts.models.LineChartConfig
 import com.dominikgold.compose.linecharts.utils.Index
 import com.dominikgold.compose.linecharts.utils.Point
-import kotlin.math.roundToInt
 
 @Composable
 internal fun LineChartInternal(
     points: List<Point>,
-    modifier: Modifier,
     config: LineChartConfig,
     hoverPopup: @Composable ((Index) -> Unit)?,
 ) {
-    BoxWithConstraints(modifier) {
+    BoxWithConstraints {
         with(LocalDensity.current) {
             val chartOutlineWidth = 1.dp.toPx()
             val lineGraphWidth = 2.dp.toPx()

@@ -7,7 +7,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Modifier
 import com.dominikgold.compose.linecharts.models.LineChartConfig
 import com.dominikgold.compose.linecharts.models.NormalizedSimpleLineChartData
 import com.dominikgold.compose.linecharts.models.SimpleLineChartState
@@ -18,7 +17,6 @@ import com.dominikgold.compose.linecharts.utils.interpolateBetweenYAxisData
 @Composable
 internal fun SimpleLineChartInternal(
     lineChartState: SimpleLineChartState,
-    modifier: Modifier,
     config: LineChartConfig,
     hoverPopup: @Composable ((Index) -> Unit)?,
 ) {
@@ -27,13 +25,11 @@ internal fun SimpleLineChartInternal(
             data = lineChartState.currentDataPoints,
             previousData = lineChartState.previousDataPoints,
             config = config,
-            modifier = modifier,
             hoverPopup = hoverPopup,
         )
     } else {
         LineChartInternal(
             points = createPoints(lineChartState.currentDataPoints.normalizedYAxisValues),
-            modifier = modifier,
             config = config,
             hoverPopup = hoverPopup,
         )
@@ -44,7 +40,6 @@ internal fun SimpleLineChartInternal(
 private fun SimpleAnimatedLineChart(
     data: NormalizedSimpleLineChartData,
     previousData: NormalizedSimpleLineChartData,
-    modifier: Modifier = Modifier,
     config: LineChartConfig,
     hoverPopup: @Composable ((Index) -> Unit)?,
 ) {
@@ -52,7 +47,6 @@ private fun SimpleAnimatedLineChart(
     if (data.normalizedYAxisValues.isEmpty()) {
         LineChartInternal(
             points = listOf(),
-            modifier = modifier,
             config = config,
             hoverPopup = hoverPopup,
         )
@@ -76,7 +70,6 @@ private fun SimpleAnimatedLineChart(
     }
     LineChartInternal(
         points = points,
-        modifier = modifier,
         config = config,
         // Disable hover popups until after the animation is completed
         hoverPopup = if (animationProgress < 1f) null else hoverPopup,

@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
@@ -40,8 +39,6 @@ fun SimpleLineChart(
                 }
                 SimpleLineChartInternal(
                     lineChartState = lineChartState,
-                    // TODO most likely no need to drag a modifier through all the composables
-                    modifier = Modifier,
                     config = config,
                     hoverPopup = if (hoverPopup != null) {
                         { dataPointIndex -> hoverPopup(lineChartState.currentDataPoints.original[dataPointIndex]) }

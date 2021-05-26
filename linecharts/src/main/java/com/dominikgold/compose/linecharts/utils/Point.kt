@@ -1,4 +1,4 @@
-package com.dominikgold.compose.linecharts
+package com.dominikgold.compose.linecharts.utils
 
 internal data class Point(val x: Percentage, val y: Percentage)
 

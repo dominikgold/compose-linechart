@@ -1,7 +1,9 @@
-package com.dominikgold.compose.linecharts
+package com.dominikgold.compose.linecharts.models
+
+import com.dominikgold.compose.linecharts.utils.Percentage
 
 internal data class NormalizedSimpleLineChartData(
-    private val original: List<SimpleLineChartDataPoint>,
+    internal val original: List<SimpleLineChartDataPoint>,
     private val padding: Double,
 ) {
 

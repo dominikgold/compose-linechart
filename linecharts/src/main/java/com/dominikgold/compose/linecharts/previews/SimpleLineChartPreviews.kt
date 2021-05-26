@@ -1,4 +1,4 @@
-package com.dominikgold.compose.linecharts
+package com.dominikgold.compose.linecharts.previews
 
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -13,6 +13,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.dominikgold.compose.linecharts.SimpleLineChart
+import com.dominikgold.compose.linecharts.models.SimpleLineChartConfig
+import com.dominikgold.compose.linecharts.models.SimpleLineChartDataPoint
+import com.dominikgold.compose.linecharts.models.SimpleLineChartState
 
 @Preview(showBackground = true)
 @Composable
@@ -35,7 +39,7 @@ fun SimpleLineChartPreview() {
         )
         SimpleLineChart(
             lineChartState = lineChartState,
-            animationSpec = null,
+            config = SimpleLineChartConfig(animationSpec = null)
         )
     }
 }
@@ -59,7 +63,7 @@ fun AnimatedLineChartPreview() {
             .background(MaterialTheme.colors.background)
             .padding(16.dp)
     ) {
-        SimpleLineChart(lineChartState, animationSpec = tween(500))
+        SimpleLineChart(lineChartState, config = SimpleLineChartConfig(animationSpec = tween(500)))
         Button(onClick = {
             lineChartState.updateDataPoints(
                 listOf(

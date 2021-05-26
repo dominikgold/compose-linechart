@@ -1,4 +1,4 @@
-package com.dominikgold.compose.linecharts
+package com.dominikgold.compose.linecharts.models
 
 import org.amshove.kluent.shouldBeEmpty
 import org.amshove.kluent.shouldBeEqualTo

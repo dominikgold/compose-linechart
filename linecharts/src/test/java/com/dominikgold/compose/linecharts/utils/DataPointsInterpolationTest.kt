@@ -1,9 +1,9 @@
-package com.dominikgold.compose.linecharts
+package com.dominikgold.compose.linecharts.utils
 
 import org.amshove.kluent.shouldBeNear
 import org.junit.Test
 
-class LineChartAnimationTest {
+class DataPointsInterpolationTest {
 
     private fun Point.shouldBeNear(other: Point, delta: Double) {
         this.x.shouldBeNear(other.x, delta)

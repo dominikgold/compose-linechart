@@ -1,4 +1,4 @@
-package com.dominikgold.compose.linecharts
+package com.dominikgold.compose.linecharts.models
 
 data class SimpleLineChartDataPoint(
     val yAxisValue: Double,

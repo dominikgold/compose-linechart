@@ -1,4 +1,4 @@
-package com.dominikgold.compose.linecharts
+package com.dominikgold.compose.linecharts.utils
 
 internal fun interpolateBetweenYAxisData(
     originalYAxisData: List<Percentage>,

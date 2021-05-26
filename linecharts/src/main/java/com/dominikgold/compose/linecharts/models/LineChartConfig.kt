@@ -1,5 +1,6 @@
-package com.dominikgold.compose.linecharts
+package com.dominikgold.compose.linecharts.models
 
+import android.annotation.SuppressLint
 import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.CubicBezierEasing
 import androidx.compose.animation.core.tween
@@ -7,6 +8,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
+@SuppressLint("ComposableNaming")
 @Composable
 fun SimpleLineChartConfig(
     chartScaffoldColor: Color = MaterialTheme.colors.onBackground,

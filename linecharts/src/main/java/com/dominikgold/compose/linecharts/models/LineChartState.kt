@@ -1,4 +1,4 @@
-package com.dominikgold.compose.linecharts
+package com.dominikgold.compose.linecharts.models
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember

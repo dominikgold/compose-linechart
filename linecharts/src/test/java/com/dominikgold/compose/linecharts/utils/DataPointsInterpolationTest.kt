@@ -1,5 +1,6 @@
 package com.dominikgold.compose.linecharts.utils
 
+import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeNear
 import org.junit.Test
 
@@ -123,6 +124,50 @@ class DataPointsInterpolationTest {
         withFullProgress[2].shouldBeNear(Point(0.5, 0.82), delta = 0.0001)
         withFullProgress[3].shouldBeNear(Point(0.6666, 0.6799), delta = 0.0001)
         withFullProgress[4].shouldBeNear(Point(1.0, 0.4), delta = 0.0001)
+    }
+
+    @Test
+    fun `an empty previous data set is handled as if it contains a single point in the center of the y axis`() {
+        val emptyData = listOf<Double>()
+        val withSinglePointAtHalf = listOf(0.5)
+        val targetData = listOf(0.5, 0.82, 0.4)
+
+        val withZeroProgress = interpolateBetweenYAxisData(emptyData, targetData, 0f)
+        withZeroProgress shouldBeEqualTo interpolateBetweenYAxisData(withSinglePointAtHalf, targetData, 0f)
+
+        val withOneFourthProgress = interpolateBetweenYAxisData(emptyData, targetData, 0.25f)
+        withOneFourthProgress shouldBeEqualTo interpolateBetweenYAxisData(withSinglePointAtHalf, targetData, 0.25f)
+
+        val withHalfProgress = interpolateBetweenYAxisData(emptyData, targetData, 0.5f)
+        withHalfProgress shouldBeEqualTo interpolateBetweenYAxisData(withSinglePointAtHalf, targetData, 0.5f)
+
+        val withThreeFourthProgress = interpolateBetweenYAxisData(emptyData, targetData, 0.75f)
+        withThreeFourthProgress shouldBeEqualTo interpolateBetweenYAxisData(withSinglePointAtHalf, targetData, 0.75f)
+
+        val withFullProgress = interpolateBetweenYAxisData(emptyData, targetData, 1f)
+        withFullProgress shouldBeEqualTo interpolateBetweenYAxisData(withSinglePointAtHalf, targetData, 1f)
+    }
+
+    @Test
+    fun `an empty target data set is handled as if it contains a single point in the center of the y axis`() {
+        val originalData = listOf(0.5, 0.82, 0.4)
+        val emptyData = listOf<Double>()
+        val withSinglePointAtHalf = listOf(0.5)
+
+        val withZeroProgress = interpolateBetweenYAxisData(originalData, emptyData, 0f)
+        withZeroProgress shouldBeEqualTo interpolateBetweenYAxisData(originalData, withSinglePointAtHalf, 0f)
+
+        val withOneFourthProgress = interpolateBetweenYAxisData(originalData, emptyData, 0.25f)
+        withOneFourthProgress shouldBeEqualTo interpolateBetweenYAxisData(originalData, withSinglePointAtHalf, 0.25f)
+
+        val withHalfProgress = interpolateBetweenYAxisData(originalData, emptyData, 0.5f)
+        withHalfProgress shouldBeEqualTo interpolateBetweenYAxisData(originalData, withSinglePointAtHalf, 0.5f)
+
+        val withThreeFourthProgress = interpolateBetweenYAxisData(originalData, emptyData, 0.75f)
+        withThreeFourthProgress shouldBeEqualTo interpolateBetweenYAxisData(originalData, withSinglePointAtHalf, 0.75f)
+
+        val withFullProgress = interpolateBetweenYAxisData(originalData, emptyData, 1f)
+        withFullProgress shouldBeEqualTo interpolateBetweenYAxisData(originalData, withSinglePointAtHalf, 1f)
     }
 
 }

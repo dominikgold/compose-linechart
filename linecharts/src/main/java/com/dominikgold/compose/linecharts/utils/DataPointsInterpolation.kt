@@ -5,11 +5,11 @@ internal fun interpolateBetweenYAxisData(
     targetYAxisData: List<Percentage>,
     progress: Float,
 ): List<Point> {
-    val originalDataPoints = createPoints(yAxisValues = originalYAxisData)
+    val originalDataPoints = createPoints(yAxisValues = if (originalYAxisData.isEmpty()) listOf(0.5) else originalYAxisData)
     if (progress <= 0f) {
         return originalDataPoints
     }
-    val targetDataPoints = createPoints(yAxisValues = targetYAxisData)
+    val targetDataPoints = createPoints(yAxisValues = if (targetYAxisData.isEmpty()) listOf(0.5) else targetYAxisData)
     if (originalYAxisData.size == targetYAxisData.size) {
         return originalDataPoints.mapIndexed { index, point ->
             Point(point.x, interpolateYAxisValue(point.y, targetYAxisData[index], progress))
